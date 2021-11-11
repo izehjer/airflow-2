@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'airflow.apps.AirflowConfig',
+    'user.apps.UserConfig' , 
 ]
 
 MIDDLEWARE = [
