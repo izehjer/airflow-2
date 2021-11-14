@@ -1,3 +1,4 @@
+import re
 from django.shortcuts import render
 from django.http import HttpResponse
 from django.contrib.auth.forms import UserCreationForm
@@ -8,4 +9,6 @@ from django.contrib.auth.forms import UserCreationForm
 
 def home_view( request , *args , **kwargs ):
     return render ( request , 'home.html' , {} )
-    
+
+def about(request , *args , **kwargs):
+    return render( request , 'about.html' , {}  )

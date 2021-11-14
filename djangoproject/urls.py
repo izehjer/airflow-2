@@ -15,8 +15,15 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-
+from users import views as users_views
+from flight import views as flight_views
+from airflow import views as airflow_views
 urlpatterns = [
     path('', include('airflow.urls')),
+    path('about' , airflow_views.about , name='about us '  ),
+    path('register' , users_views.registerpage , name='register' ), 
+    path('login' , users_views.loginpage , name='login'),
     path('admin/', admin.site.urls),
+    path('flight' , flight_views.flight_show , name='flight'),
+    path('chat/' , include('chat.urls')), 
 ]

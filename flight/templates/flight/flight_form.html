@@ -1,0 +1,223 @@
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <title>Filter Form</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <style>
+        *{
+  padding: 0;
+  margin: 0;
+  text-decoration: none;
+  list-style: none;
+  box-sizing: border-box;
+}
+body{
+  font-family: "Times New Roman";
+}
+nav{
+  font-family: montserrat;
+  background: #0082e6;
+  height: 80px;
+  width: 100%;
+}
+label.logo{
+  color: white;
+  font-size: 35px;
+  line-height: 80px;
+  padding: 0 50px;
+  font-weight: bold;
+}
+nav ul{
+  float: right;
+  margin-right: 20px;
+}
+nav ul li{
+  display: inline-block;
+  line-height: 80px;
+  margin: 0 5px;
+}
+nav ul li a{
+  color: white;
+  font-size: 17px;
+  padding: 7px 13px;
+  border-radius: 3px;
+  text-transform: uppercase;
+}
+a.active,a:hover{
+  background: #1b9bff;
+  transition: .5s;
+}
+.checkbtn{
+  font-size: 30px;
+  color: white;
+  float: right;
+  line-height: 80px;
+  margin-right: 40px;
+  cursor: pointer;
+  display: none;
+}
+#check{
+  display: none;
+}
+ul {
+  list-style-type: none;
+}
+@media (max-width: 952px){
+  label.logo{
+    font-size: 30px;
+    padding-left: 50px;
+  }
+  nav ul li a{
+    font-size: 16px;
+  }
+}
+@media (max-width: 858px){
+  .checkbtn{
+    display: block;
+  }
+  ul{
+    position: fixed;
+    width: 100%;
+    height: 100vh;
+    background: #2c3e50;
+    top: 80px;
+    left: -100%;
+    text-align: center;
+    transition: all .5s;
+  }
+  nav ul li{
+    display: block;
+    margin: 50px 0;
+    line-height: 30px;
+  }
+  nav ul li a{
+    font-size: 20px;
+  }
+  a:hover,a.active{
+    background: none;
+    color: #0082e6;
+  }
+  #check:checked ~ ul{
+    left: 0;
+  }
+}
+section{
+  background-size: cover;
+  height: calc(100vh - 80px);
+}
+    </style>
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
+  </head>
+  <body>
+    <nav>
+      <input type="checkbox" id="check">
+      <label for="check" class="checkbtn">
+        <i class="fas fa-bars"></i>
+      </label>
+      <label class="logo">AirFlow</label>
+      <ul>
+      {% if user.is_authenticated %}
+        <li>Welcome {{ user.first_name }}</li>
+        <li><a href="">my bookings</a></li>
+        <li><a href="/logout">logout</a></li>
+      {% else %}
+        <li><a href="/login">login</a></li>
+      {% endif %}
+      </ul>
+    </nav>
+
+    <main role="main" class="container">
+    <br/>
+
+      <h3>Filter Flights</h3>
+      <form method="GET" action="../../flights">
+        <div class="form-row">
+            <div class="form-group col-6">
+                <div class="input-group">
+                    <input class="form-control py-2 border-right-0 border" type="search" name="dep_ap" placeholder="Departure"/>
+                    <span class="input-group-append">
+                        <div class="input-group-text bg-transparent">
+                            <i class="fa fa-search"></i>
+                        </div>
+                    </span>
+                </div>
+            </div>
+            <div class="form-group col-6">
+                <div class="input-group">
+                    <input class="form-control py-2 border-right-0 border" type="search" name="arr_ap" placeholder="Arrival"/>
+                    <span class="input-group-append">
+                        <div class="input-group-text bg-transparent">
+                            <i class="fa fa-search"></i>
+                        </div>
+                    </span>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group col-md-4">
+            <label for="dep_time">Least departure date-time</label>
+            <input type="datetime-local" class="form-control" id="dep_time" name="datetime_min">
+          </div>
+          <div class="form-group col-md-4">
+            <label for="arr_time">Maximum arrival date-time</label>
+            <input type="datetime-local" class="form-control" id="arr_time" name="datetime_max">
+          </div>
+          <div class="form-group col-md-4">
+            <label for="airline">Airline</label>
+            <select id="airline" class="form-control" name="airline">
+              {% for cat in a_ch %}
+              <option value="{{ cat }}">{{ cat }}</option>
+              {% endfor %}
+            </select>
+          </div>
+        </div>
+        <div class="form-group">
+          <div class="form-check">
+            <input class="form-check-input" type="checkbox" id="sort" name="sort">
+            <label class="form-check-label" for="sort">
+              Sort by fare
+            </label>
+          </div>
+        </div>
+        <button type="submit" class="btn btn-primary">Search</button>
+      </form>
+      <hr />
+
+      <div class="row">
+        <ul>
+          {% for flight in queryset %}
+            <li>
+              {{ flight.airline }}
+                <br/>
+              <span>Departure: {{ flight.dep_airport }}  {{ flight.dep_time }}</span>
+                <br/>
+              <span>Arrival: {{ flight.arr_airport }}  {{ flight.arr_time }}</span>
+                <br/>
+              <span>Fare: {{ flight.fare }}</span>
+            </li>
+            <hr />
+          {% endfor %}
+          {% if len == 0 %}
+            <li>
+                <span>
+                    Sorry, there are no flights available at the moment that match your search.
+                </span>
+            </li>
+          {% endif %}
+        </ul>
+      </div>
+
+    </main>
+
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+
+</body>
+
+</html>
